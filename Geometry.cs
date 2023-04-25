@@ -103,7 +103,7 @@
         public class Angle
         {
             public double Radian { get; }
-            public bool IsRight { get => Radian == Math.PI / 2; }
+            public bool IsRight { get => Radian == Math.PI / 2; } 
 
             public Angle(double radian)
             {
@@ -137,20 +137,19 @@
                 return double.NaN;
             }
 
-            private double Normilize(double value)
+            private static double Normilize(double value)
             {
+                if (Math.Abs(value) >= Math.Tau)
+                    value %= Math.Tau;
                 if (value < 0)
-                    return Normilize(-value);
-                if (value >= Math.Tau)
-                    return value % Math.Tau;
-                else
-                    return value;
+                    return Normilize(value + Math.Tau);
+                return Math.Round(value, 6);
             }
 
             public static bool operator ==(Angle angle, Angle other) => angle.Radian == other.Radian;
             public static bool operator !=(Angle angle, Angle other) => angle.Radian != other.Radian;
-            public static bool operator ==(Angle angle, double other) => angle.Radian == other;
-            public static bool operator !=(Angle angle, double other) => angle.Radian != other;
+            public static bool operator ==(Angle angle, double other) => angle.Radian == Normilize(other);
+            public static bool operator !=(Angle angle, double other) => angle.Radian != Normilize(other);
             public static Angle operator +(Angle angle, Angle other) => new(angle.Radian + other.Radian);
             public static Angle operator -(Angle angle, Angle other) => new(angle.Radian - other.Radian);
 
