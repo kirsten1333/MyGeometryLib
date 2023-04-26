@@ -121,14 +121,14 @@ namespace MyGeometryLib
                    PointA == triangle.PointA &&
                    PointB == triangle.PointB &&
                    PointC == triangle.PointC &&
-                   EdgeA == triangle.EdgeA &&
-                   EdgeB == triangle.EdgeB &&
-                   EdgeC == triangle.EdgeC;
+                   triangle.EdgeA.EqualTo(EdgeA) &&
+                   triangle.EdgeB.EqualTo(EdgeB) &&
+                   triangle.EdgeC.EqualTo(EdgeC);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(PointA, PointB, PointC, EdgeA, EdgeB, EdgeC);
+            return HashCode.Combine(PointA, PointB, PointC, Math.Round(EdgeA, 8), Math.Round(EdgeB, 8), Math.Round(EdgeC, 8));
         }
     }
 }

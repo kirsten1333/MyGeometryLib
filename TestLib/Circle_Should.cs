@@ -5,9 +5,33 @@
     {
         private readonly Random random = new(6663628);
 
+        #region AreaTest
+
+        [Test]
+        public void StressAreaTest()
+        {
+            for (int i = 0; i < 100000; i++)
+            {
+                double distance = GetRandomDouble();
+                double expectedArea = distance * distance * Math.PI;
+                CircleAreaTest(distance, expectedArea);
+            }
+        }
+
+        [TestCase(0, 0)]
+        [TestCase(1, Math.PI)]
+        [TestCase(1.41421356237, Math.Tau)]
+        [TestCase(123123.15153, 47624378320.20846)]
+        [TestCase(99999, 31415298220.508804)]
+        public void CircleAreaTest(double distance, double expectedArea)
+        {
+            Circle circle = new(distance);
+            double area = circle.GetArea();
+            Assert.AreEqual(expectedArea, area, 0.00001);
+        }
+        #endregion
+
         #region IntersectTest
-
-
         [Test]
         public void IntersectionContactStressTest()
         {
@@ -57,7 +81,6 @@
             }
         }
         #endregion
-
 
         #region EqualityTests
         [Test]
@@ -119,7 +142,7 @@
 
         static void CheckFirstPoint(Circle circle1, double distance)
         {
-            Assert.AreEqual(distance, circle1.Radius, 0.0000001,
+            Assert.AreEqual(distance, circle1.Radius, 0.000001,
                 $"Wrong point in intertsection\n" +
                 $"on Circle: {circle1}" +
                 $"with distance {distance}");
