@@ -52,11 +52,11 @@ namespace TestLib
         }
 
         [TestCase(1, 1000, TestName = "Workability")]
-        [TestCase(1000, 1000, TestName = "10^4")]
-        [TestCase(10000, 1000, TestName = "10^5")]
-        [TestCase(100000, 1000, TestName = "10^6")]
-        [TestCase(1000000, 1000, TestName = "10^7")]
-        [TestCase(10000000, 1000, TestName = "10^8")]
+        [TestCase(1000, 1000, TestName = "{m} 10^4")]
+        [TestCase(10000, 1000, TestName = "{m} 10^5")]
+        [TestCase(100000, 1000, TestName = "{m} 10^6")]
+        [TestCase(1000000, 1000, TestName = "{m} 10^7")]
+        [TestCase(10000000, 1000, TestName = "{m} 10^8")]
         public void AngleCalcPerfomanceTest(int repCount, double timelimitInSeconds)
         {
             var values = GenerateValidAnglesArray(repCount);

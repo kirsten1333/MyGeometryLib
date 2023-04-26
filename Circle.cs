@@ -1,18 +1,18 @@
-﻿using MyGeometryLib.Geometry;
-
-namespace MyGeometryLib
+﻿namespace MyGeometryLib
 {
     internal class Circle : IFigure
     {
         public Point Center { get; }
         public double Radius { get; }
 
-        public Circle(Point center, double radius)
-        {
-            Center = center;
-            Radius = radius;
-        }
-        public Circle(double radius) : this (new(0,0), radius) { }
+        public Circle(Point center, Point pointOnCircle) 
+            : this(center, center.DistanceTo(pointOnCircle)) { }
+
+        public Circle(Point center, double radius) 
+            => (Center, Radius) = (center, radius);
+
+        public Circle(double radius) 
+            : this(new(0, 0), radius) { }
 
         /// <summary>
         /// Выдаёт точки пересечения двух окружностей
@@ -30,9 +30,10 @@ namespace MyGeometryLib
             double dist = Center.DistanceTo(other.Center);
             double sqrDist = Center.SqrDistanceTo(other.Center);
 
-            if (Center == other.Center && Radius != other.Radius) return Enumerable.Empty<Point>();
-            else if (Center == other.Center && Radius == other.Radius) return GetThreePoints();
-            else if (dist > Radius + other.Radius) return Enumerable.Empty<Point>();
+            if (Center == other.Center && !Radius.EqualTo(other.Radius)) return Enumerable.Empty<Point>();
+            else if (Center == other.Center && Radius.EqualTo(other.Radius)) return GetThreePoints();
+            else if (Math.Round(dist - (Radius + other.Radius), 8) > 0) 
+                return Enumerable.Empty<Point>();
             else
             {
                 return IntersectImpl();
@@ -53,33 +54,41 @@ namespace MyGeometryLib
                 Point p0 = Center;
                 Point p1 = other.Center;
                 // Источник: http://algolist.manual.ru/maths/geom/intersect/circlecircle2d.php
-                double a = (r0 - r1 + sqrDist) / (2 * dist); 
-                double h = Math.Sqrt(r0 - a*a);
+                double a = (r0 - r1 + sqrDist) / (2 * dist);
+                
+                double SqrH = r0 - a * a;
+                if (Radius.EqualTo(a)) SqrH = 0;
+                //if (Math.Round(SqrH, 5) == 0 || SqrH < 0) SqrH = 0;
+                double h = Math.Sqrt(SqrH);
                 Point p2 = p0 + a * (p1 - p0) / dist;
 
-                double x31 = p2.X - h * (p1.Y - p0.Y) / dist;
-                double y31 = p2.Y + h * (p1.X - p0.X) / dist;
-                Point p31 = new(x31, y31);
+                double hAdaptedY = Math.Round(h * (p1.Y - p0.Y) / dist, 10);
+                double hAdaptedX = Math.Round(h * (p1.X - p0.X) / dist, 10);
 
+                Point p31 = new(p2.X - hAdaptedY, p2.Y + hAdaptedX);
                 yield return p31;
 
-                double x32 = p2.X + h * (p1.Y - p0.Y) / dist;
-                double y32 = p2.Y - h * (p1.X - p0.X) / dist;
-                Point p32 = new(x32, y32);
-                
-                if(p31 != p32) { yield return p32; }
+                Point p32 = new(p2.X + hAdaptedY, p2.Y - hAdaptedX);
+                if (SqrH != 0) 
+                { 
+                    yield return p32; 
+                }
             }
         }
 
         public double GetArea() => Math.PI * Radius * Radius;
 
-        public double GetPerimeter() => 2 * Math.PI* Radius;
+        public double GetPerimeter() => 2 * Math.PI * Radius;
+
+        public static bool operator ==(Circle circle, Circle other) 
+            => (circle.Center == other.Center) && circle.Radius.EqualTo(other.Radius);
+        public static bool operator !=(Circle circle, Circle other) 
+            => !((circle.Center == other.Center) && circle.Radius.EqualTo(other.Radius));
 
         public override bool Equals(object? obj)
         {
-            return obj is Circle other 
-                && other.Radius == Radius 
-                && other.Center == Center;
+            return obj is Circle other
+                && (Center, Radius) == (other.Center, other.Radius);
         }
 
         public override int GetHashCode()

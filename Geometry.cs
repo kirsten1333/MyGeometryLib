@@ -19,8 +19,8 @@
                 Hash = HashCode(x, y);
             }
 
-            public static bool operator ==(Point point, Point other) => point.X == other.X && point.Y == other.Y;
-            public static bool operator !=(Point point, Point other) => point.X != other.X || point.Y != other.Y;
+            public static bool operator ==(Point point, Point other) => point.X.EqualTo(other.X) && point.Y.EqualTo(other.Y);
+            public static bool operator !=(Point point, Point other) => !point.X.EqualTo(other.X) || !point.Y.EqualTo(other.Y);
 
             public static Point operator +(Point point, Point other) => new(point.X + other.X, point.Y + other.Y);
             public static Point operator -(Point point, Point other) => new(point.X - other.X, point.Y - other.Y);
@@ -30,9 +30,10 @@
 
             public double SqrDistanceTo(Point other) => (X - other.X) * (X - other.X) + (Y - other.Y) * (Y - other.Y);
 
-            public double DistanceTo(Point other) => Math.Sqrt(SqrDistanceTo(other));
+            public double DistanceTo(Point other) => Math.Round(Math.Sqrt(SqrDistanceTo(other)), 10);
 
-            private static int HashCode(double x, double y) => (x.GetHashCode() * 397) ^ y.GetHashCode();
+            private static int HashCode(double x, double y) 
+                => (Math.Round(x, 8).GetHashCode() * 397) ^ Math.Round(y, 8).GetHashCode();
 
             public override int GetHashCode() => Hash;
 
@@ -41,7 +42,7 @@
 
             public bool Equals(Point other)
             {
-                return X == other.X && Y == other.Y;
+                return this == other;
             }
 
             public override bool Equals(object? obj)
@@ -103,7 +104,7 @@
         public class Angle
         {
             public double Radian { get; }
-            public bool IsRight { get => Radian == Math.PI / 2; } 
+            public bool IsRight { get => Radian.EqualTo(Math.PI / 2); } 
 
             public Angle(double radian)
             {
@@ -146,20 +147,20 @@
                 return Math.Round(value, 6);
             }
 
-            public static bool operator ==(Angle angle, Angle other) => angle.Radian == other.Radian;
-            public static bool operator !=(Angle angle, Angle other) => angle.Radian != other.Radian;
-            public static bool operator ==(Angle angle, double other) => angle.Radian == Normilize(other);
-            public static bool operator !=(Angle angle, double other) => angle.Radian != Normilize(other);
+            public static bool operator ==(Angle angle, Angle other) => angle.Radian.EqualTo(other.Radian);
+            public static bool operator !=(Angle angle, Angle other) => !angle.Radian.EqualTo(other.Radian);
+            public static bool operator ==(Angle angle, double other) => angle.Radian.EqualTo(Normilize(other));
+            public static bool operator !=(Angle angle, double other) => !angle.Radian.EqualTo(Normilize(other));
             public static Angle operator +(Angle angle, Angle other) => new(angle.Radian + other.Radian);
             public static Angle operator -(Angle angle, Angle other) => new(angle.Radian - other.Radian);
 
-            public bool Equals(Angle other) => Radian == other.Radian;
+            public bool Equals(Angle other) => this == other;
 
             public override bool Equals(object? obj) => obj is Angle other && Equals(other);
 
             public override int GetHashCode()
             {
-                return Radian.GetHashCode();
+                return Math.Round(Radian, 8).GetHashCode();
             }
 
             public override string ToString()
