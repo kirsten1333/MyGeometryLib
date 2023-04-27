@@ -14,8 +14,8 @@ namespace TestLib
             int count = 200;
             for (int i = 0; i < count; i++)
             {
-                double radian = random.NextDouble();
-                double sign = random.NextDouble() > 0.5 ? 1 : -1;
+                double radian = random.NextDouble(0, Math.Tau);
+                double sign = random.NextSign();
                 double sameRadian = radian + Math.Tau * random.Next(100) * sign;
                 Angle a1 = new(radian);
                 Angle a2 = new(sameRadian);
@@ -69,7 +69,7 @@ namespace TestLib
             var values = new (double, double, double)[repCount];
             for (int i = 0; i < repCount; i++)
             {
-                (Point p1, Point p2, Point p3) = (GeneratePoint(), GeneratePoint(), GeneratePoint());
+                (Point p1, Point p2, Point p3) = (random.NextPoint(), random.NextPoint(), random.NextPoint());
                 double a = p1.DistanceTo(p2);
                 double b = p2.DistanceTo(p3);
                 double c = p3.DistanceTo(p1);
@@ -77,9 +77,6 @@ namespace TestLib
             }
             return values;
         }
-
-        private Point GeneratePoint() => new(random.Next(), random.Next());
-        //private double GenerateDouble() => random.NextDouble() * random.Next(1000) + 0.1;
 
         private static Action<(double, double, double)> CalcAngle => ((double, double, double) edges) => Angle.GetABAngle(edges.Item1, edges.Item2, edges.Item3);
 

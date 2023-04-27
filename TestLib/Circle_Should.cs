@@ -4,6 +4,7 @@
     internal class Circle_Should
     {
         private readonly Random random = new(6663628);
+        private readonly double maxRandom = 100000;
 
         #region AreaTest
 
@@ -12,7 +13,7 @@
         {
             for (int i = 0; i < 100000; i++)
             {
-                double distance = GetRandomDouble();
+                double distance = random.NextDouble(maxRandom);
                 double expectedArea = distance * distance * Math.PI;
                 CircleAreaTest(distance, expectedArea);
             }
@@ -152,9 +153,9 @@
         {
             do
             {
-                Point center1 = GetRandomPoint();
-                Point center2 = GetRandomPoint();
-                Point IntersectionPoint = GetRandomPoint();
+                Point center1 = random.NextPoint();
+                Point center2 = random.NextPoint();
+                Point IntersectionPoint = random.NextPoint();
 
                 circle1 = new(center1, IntersectionPoint);
                 circle2 = new(center2, IntersectionPoint);
@@ -170,8 +171,8 @@
 
         private void CreateContactCircles(out Circle circle, out Circle circle1)
         {
-            Point center1 = GetRandomPoint();
-            Point center2 = GetRandomPoint();
+            Point center1 = random.NextPoint();
+            Point center2 = random.NextPoint();
 
             if (center1 == center2) center2 += new Point(2, 2);
 
@@ -186,21 +187,15 @@
 
         private void CreateRandomSameCircles(out Circle circle, out Circle circle1)
         {
-            var radius = GetRandomDouble();
+            var radius = random.NextDouble(maxRandom);
             circle = new(radius);
             circle1 = new(radius);
         }
 
         private void CreateRandomNotSameCircles(out Circle circle, out Circle circle1)
         {
-            circle = new(GetRandomPoint(), GetRandomDouble());
+            circle = new(random.NextPoint(), random.NextDouble(maxRandom));
             circle1 = new(circle.Radius + 2);
         }
-
-        private Point GetRandomPoint() =>
-            new(GetRandomDouble(), GetRandomDouble());
-
-        private double GetRandomDouble() 
-            => random.Next(100000) + random.NextDouble();
     }
 }
