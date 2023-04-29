@@ -101,7 +101,7 @@
         /// <summary>
         /// Угол в радианах, представлен неотрицательной величиной в пределах [0, Tau).
         /// </summary>
-        public class Angle
+        public class Angle : IComparable<Angle>
         {
             public double Radian { get; }
             public bool IsRight { get => Radian.EqualTo(Math.PI / 2); } 
@@ -166,6 +166,11 @@
             public override string ToString()
             {
                 return string.Format($"{Radian,4:f2}");
+            }
+
+            public int CompareTo(Angle? other)
+            {
+                return other!.Radian.CompareTo(Radian) * -1;
             }
         }
     }

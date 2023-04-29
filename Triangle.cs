@@ -50,6 +50,33 @@ namespace MyGeometryLib
             }
         }
 
+        private Angle[] GetAngles()
+        {
+            Angle[] angles = new Angle[3];
+            angles[0] = AngleA;
+            angles[1] = AngleB;
+            angles[2] = AngleC;
+            return angles;
+        }
+
+        private double[] GetEdges()
+        {
+            double[] edges = new double[3];
+            edges[0] = EdgeA;
+            edges[1] = EdgeB;
+            edges[2] = EdgeC;
+            return edges;
+        }
+
+        private Point[] GetPoints()
+        {
+            Point[] points = new Point[3];
+            points[0] = PointA;
+            points[1] = PointB;
+            points[2] = PointC;
+            return points;
+        }
+
         public Triangle(double edgeA, double edgeB, double edgeC)
         {
             IsAutoPoints = true;
@@ -115,15 +142,21 @@ namespace MyGeometryLib
                                  AngleA, AngleB, AngleC, EdgeA, EdgeB, EdgeC);
         }
 
+        /// <summary>
+        /// Устанавливает отношение конгруэнтности, не тождественного равенства (Равенство углов и сторон, но не координат)
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns>True при конгруэнтности треугольников</returns>
+        public bool Equals(Triangle other)
+        {
+            bool isSameAngles = GetAngles().OrderBy(x=>x).SequenceEqual(other.GetAngles().OrderBy(x=>x));
+            bool isSameEdges = GetEdges().OrderBy(x => x).SequenceEqual(other.GetEdges().OrderBy(x => x));
+            return isSameAngles && isSameEdges;
+        }
+
         public override bool Equals(object? obj)
         {
-            return obj is Triangle triangle &&
-                   PointA == triangle.PointA &&
-                   PointB == triangle.PointB &&
-                   PointC == triangle.PointC &&
-                   triangle.EdgeA.EqualTo(EdgeA) &&
-                   triangle.EdgeB.EqualTo(EdgeB) &&
-                   triangle.EdgeC.EqualTo(EdgeC);
+            return obj is Triangle triangle && triangle.Equals(this);
         }
 
         public override int GetHashCode()
