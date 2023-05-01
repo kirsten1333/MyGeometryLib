@@ -143,7 +143,7 @@
             t2 = new Triangle(p1, p2, p3);
         }
 
-        private void CreateThreeRandomPoints(out Point p1, out Point p2, out Point p3)
+        internal void CreateThreeRandomPoints(out Point p1, out Point p2, out Point p3)
         {
             p1 = random.NextPoint(maxRandom);
             p2 = random.NextPoint(maxRandom);
