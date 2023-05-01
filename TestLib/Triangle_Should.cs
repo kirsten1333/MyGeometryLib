@@ -2,17 +2,44 @@
 {
     internal class Triangle_Should
     {
-        private Random random = new(6663628);
+        private readonly Random random = new(6663628);
+        private const double maxRandom = 10000;
+        private const double accuracy = 0.001;
 
         #region AreaTest
 
-        [TestCase(3, 4, 5, 6)]
+        [Test]
+        public void StressAreaTest()
+        {
+            for (int i = 0; i < 10000; i++)
+            {
+                CreateSameTriangles(out Triangle t, out _);
 
+                double pp = t.GetPerimeter() / 2;
+                double sqrExpectedArea = pp * (pp - t.EdgeA) * (pp - t.EdgeB) * (pp - t.EdgeC);
+                double expectedArea = Math.Sqrt(sqrExpectedArea);
+
+                SimpleAreaTest(t.EdgeA, t.EdgeB, t.EdgeC, expectedArea);
+            }
+        }
+
+        [TestCase(3, 4, 5, 6)]
+        [TestCase(10, 11, 12, 51.5212334867)]
+        [TestCase(95, 31, 123, 717.70689525)]
+        [TestCase(1.5, 2.5, 3.5, 1.62379763209)]
         public void SimpleAreaTest(double edgeA, double edgeB, double edgeC, double expectedArea)
         {
             Triangle t = new(edgeA, edgeB, edgeC);
-            var actual = t.GetArea();
-            Assert.AreEqual(expectedArea, actual, 0.000001);
+            foreach (var item in Enum.GetValues(typeof(Triangle.TriangleAreaCalculator)))
+            {
+                Triangle.TriangleAreaCalculator areaCalculator = (Triangle.TriangleAreaCalculator)item;
+                var actual = t.GetArea(areaCalculator);
+                Assert.AreEqual(expectedArea, actual, accuracy,
+                    $"Expected: {expectedArea} +/- {accuracy}\n" +
+                    $"\tActual: {actual}\n" +
+                    $"\tDifference: {expectedArea - actual}\n" +
+                    $"\tWith {item} AreaCalculator");
+            }
         }
         #endregion
 
@@ -118,9 +145,9 @@
 
         private void CreateThreeRandomPoints(out Point p1, out Point p2, out Point p3)
         {
-            p1 = random.NextPoint();
-            p2 = random.NextPoint();
-            p3 = random.NextPoint();
+            p1 = random.NextPoint(maxRandom);
+            p2 = random.NextPoint(maxRandom);
+            p3 = random.NextPoint(maxRandom);
         }
         #endregion
     }

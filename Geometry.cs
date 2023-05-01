@@ -30,10 +30,10 @@
 
             public double SqrDistanceTo(Point other) => (X - other.X) * (X - other.X) + (Y - other.Y) * (Y - other.Y);
 
-            public double DistanceTo(Point other) => Math.Round(Math.Sqrt(SqrDistanceTo(other)), 10);
+            public double DistanceTo(Point other) => Math.Sqrt(SqrDistanceTo(other));
 
             private static int HashCode(double x, double y) 
-                => (Math.Round(x, 8).GetHashCode() * 397) ^ Math.Round(y, 8).GetHashCode();
+                => (Math.Round(x, 10).GetHashCode() * 397) ^ Math.Round(y, 10).GetHashCode();
 
             public override int GetHashCode() => Hash;
 
@@ -144,7 +144,7 @@
                     value %= Math.Tau;
                 if (value < 0)
                     return Normilize(value + Math.Tau);
-                return Math.Round(value, 6);
+                return value;
             }
 
             public static bool operator ==(Angle angle, Angle other) => angle.Radian.EqualTo(other.Radian);
@@ -160,7 +160,7 @@
 
             public override int GetHashCode()
             {
-                return Math.Round(Radian, 8).GetHashCode();
+                return Math.Round(Radian, 10).GetHashCode();
             }
 
             public override string ToString()

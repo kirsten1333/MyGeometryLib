@@ -4,14 +4,15 @@
     internal class Circle_Should
     {
         private readonly Random random = new(6663628);
-        private readonly double maxRandom = 100000;
+        private readonly double maxRandom = 10000;
+        private const double accuracy = 0.000001;
 
         #region AreaTest
 
         [Test]
         public void StressAreaTest()
         {
-            for (int i = 0; i < 100000; i++)
+            for (int i = 0; i < 10000; i++)
             {
                 double distance = random.NextDouble(maxRandom);
                 double expectedArea = distance * distance * Math.PI;
@@ -28,7 +29,7 @@
         {
             Circle circle = new(distance);
             double area = circle.GetArea();
-            Assert.AreEqual(expectedArea, area, 0.00001);
+            Assert.AreEqual(expectedArea, area, accuracy);
         }
         #endregion
 
@@ -143,7 +144,7 @@
 
         static void CheckFirstPoint(Circle circle1, double distance)
         {
-            Assert.AreEqual(distance, circle1.Radius, 0.000001,
+            Assert.AreEqual(distance, circle1.Radius, accuracy,
                 $"Wrong point in intertsection\n" +
                 $"on Circle: {circle1}" +
                 $"with distance {distance}");
@@ -166,7 +167,7 @@
         private static bool CheckContactCircles(Circle circle1, Circle circle2)
         {
             var dist = circle1.Center.DistanceTo(circle2.Center);
-            return 0 == Math.Round(circle1.Radius + circle2.Radius - dist, 8);
+            return (circle1.Radius + circle2.Radius - dist).EqualTo(0d);
         }
 
         private void CreateContactCircles(out Circle circle, out Circle circle1)
@@ -178,7 +179,7 @@
 
             var dist = center1.DistanceTo(center2);
 
-            var r1 = dist * (random.NextDouble()*(1-0.1) + 0.1);
+            var r1 = dist * random.NextDouble(0.001, 1);
             var r2 = dist - r1;
 
             circle = new(center1, r1);

@@ -32,7 +32,7 @@
 
             if (Center == other.Center && !Radius.EqualTo(other.Radius)) return Enumerable.Empty<Point>();
             else if (Center == other.Center && Radius.EqualTo(other.Radius)) return GetThreePoints();
-            else if (Math.Round(dist - (Radius + other.Radius), 8) > 0) 
+            else if (Math.Round(dist - (Radius + other.Radius), 10) > 0) 
                 return Enumerable.Empty<Point>();
             else
             {
@@ -62,8 +62,8 @@
                 double h = Math.Sqrt(SqrH);
                 Point p2 = p0 + a * (p1 - p0) / dist;
 
-                double hAdaptedY = Math.Round(h * (p1.Y - p0.Y) / dist, 10);
-                double hAdaptedX = Math.Round(h * (p1.X - p0.X) / dist, 10);
+                double hAdaptedY = h * (p1.Y - p0.Y) / dist;
+                double hAdaptedX = h * (p1.X - p0.X) / dist;
 
                 Point p31 = new(p2.X - hAdaptedY, p2.Y + hAdaptedX);
                 yield return p31;

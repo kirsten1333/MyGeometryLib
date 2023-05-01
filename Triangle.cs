@@ -1,6 +1,4 @@
-﻿using MyGeometryLib.Geometry;
-
-namespace MyGeometryLib
+﻿namespace MyGeometryLib
 {
     internal class Triangle : IFigure
     {
@@ -83,7 +81,7 @@ namespace MyGeometryLib
             CreateFromEdges(edgeA, edgeB, edgeC);
         }
 
-        public Triangle (Point pointA, Point pointB, Point pointC)
+        public Triangle(Point pointA, Point pointB, Point pointC)
         {
             PointA = pointA;
             PointB = pointB;
@@ -120,7 +118,7 @@ namespace MyGeometryLib
         private double GetAreaGeron()
         {
             double p = GetPerimeter() / 2;
-            double sqrArea = p * (p-EdgeA) * (p-EdgeB) * (p-EdgeC);
+            double sqrArea = p * (p - EdgeA) * (p - EdgeB) * (p - EdgeC);
             return Math.Sqrt(sqrArea);
         }
 
@@ -149,7 +147,7 @@ namespace MyGeometryLib
         /// <returns>True при конгруэнтности треугольников</returns>
         public bool Equals(Triangle other)
         {
-            bool isSameAngles = GetAngles().OrderBy(x=>x).SequenceEqual(other.GetAngles().OrderBy(x=>x));
+            bool isSameAngles = GetAngles().OrderBy(x => x).SequenceEqual(other.GetAngles().OrderBy(x => x));
             bool isSameEdges = GetEdges().OrderBy(x => x).SequenceEqual(other.GetEdges().OrderBy(x => x));
             return isSameAngles && isSameEdges;
         }
@@ -161,7 +159,7 @@ namespace MyGeometryLib
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(PointA, PointB, PointC, Math.Round(EdgeA, 8), Math.Round(EdgeB, 8), Math.Round(EdgeC, 8));
+            return HashCode.Combine(PointA, PointB, PointC, Math.Round(EdgeA, 10), Math.Round(EdgeB, 10), Math.Round(EdgeC, 10));
         }
     }
 }

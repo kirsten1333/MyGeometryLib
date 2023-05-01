@@ -23,6 +23,11 @@ namespace MyGeometryLib
             return new(random.NextDouble(min, max), random.NextDouble(min, max));
         }
 
+        public static Point NextPoint(this Random random, double max)
+        {
+            return NextPoint(random, -max, max);
+        }
+
         public static Point NextPoint(this Random random)
         {
             return NextPoint(random, 0, 100000);
