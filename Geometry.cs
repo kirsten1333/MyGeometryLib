@@ -2,6 +2,7 @@
 {
     namespace Geometry
     {
+        //Возможно, излишний класс в поставленных условиях
         public readonly struct Point
         {
             public static Point Zero { get; } = new(0, 0);
